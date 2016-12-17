@@ -14,14 +14,17 @@ var deck = [
             "KC",            "KD",            "KH",            "KS" 
             ];
 
-deck = shuffle(deck);
+var new_deck = shuffle(deck);
 
-function shuffle(array) {
-  var num = array.length, t, i;
-
+function shuffle(array_old) {
+    
+  var num = array_old.length;
+  var array = array_old;          
   // Enquanto existir elementos
   while (num) {
-
+              
+    var t, i;
+    
     // Escolhe um elemento não escolhido ainda.
     i = Math.floor(Math.random() * num--);
 
@@ -34,4 +37,4 @@ function shuffle(array) {
   return array;
 }
 
-console.log(deck);
+console.log(new_deck);
