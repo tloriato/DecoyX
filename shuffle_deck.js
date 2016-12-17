@@ -20,15 +20,10 @@ function shuffle(array_old) {
     
   var num = array_old.length;
   var array = array_old;          
-  // Enquanto existir elementos
-  while (num) {
-              
-    var t, i;
-    
-    // Escolhe um elemento não escolhido ainda.
-    i = Math.floor(Math.random() * num--);
 
-    // Substitui o último elemento não sortido array pelo novo
+  while (num) {            
+    var t, i;
+    i = Math.floor(Math.random() * num--);
     t = array[num];
     array[num] = array[i];
     array[i] = t;
