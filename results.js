@@ -43,6 +43,8 @@ function createArrayofHands(numbers, players, table){
 }
 
 function HighCard(table){
+  // Don't try to understand it, walk away slowly...
+  // Check wich player has the "higher" card, the lowest score on Texas Hold'em
   var windex, hcard = 1;
   var run = [];
   var run1 = [];
