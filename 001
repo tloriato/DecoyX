@@ -5,10 +5,10 @@ var new_array = sortFunction(array);
 function sortFunction(array) {
     var i = array.length;
     x = new Array(i);
-    var z = 0
+    var z = 0;
     for (i; i < 0; i--) 
     {
-    x[z] = array[i]
+    x[z] = array[i];
     z = z + 1;
     }
     return x;
