@@ -2,47 +2,38 @@
 	"players": [{
 		"name": "Satoshi Nakamoto",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Vitalik Buterin",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Gavin Wood",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Hal Finney",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Victor Maia",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Nick Szabo",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Craig Wright",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Wei Dai",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}, {
 		"name": "Gregory Maxwell",
 		"money": "100",
-		"card1": "null",
-		"card2": "null"
+		"cards": ["null", "null"]
 	}]
 }
