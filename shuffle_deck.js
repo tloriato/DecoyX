@@ -1,18 +1,24 @@
+var players = require("./players.json");
+var results = require('./results.js');
+
+console.log("Numero de Players:");
+var numbers_of_players = Number(process.argv.slice(2)) ;
+console.log(numbers_of_players);
 
 var deck = [
-            "AceC",        "AceD",          "AceH",          "AceS",
-            "2C",            "2D",            "2H",            "2S",
-            "3C",            "3D",            "3H",            "3S",
-            "4C",            "4D",            "4H",            "4S",
-            "5C",            "5D",            "5H",            "5S",
-            "6C",            "6D",            "6H",            "6S",
-            "7C",            "7D",            "7H",            "7S",
-            "8C",            "8D",            "8H",            "8S",
-            "9C",            "9D",            "9H",            "9S",
-            "10C",           "10D",           "10H",           "10S",
-            "JC",            "JD",            "JH",            "JS",
-            "QC",            "QD",            "QH",            "QS",
-            "KC",            "KD",            "KH",            "KS"
+            "A♣",            "A♦",            "A♥",            "A♠",
+            "2♣",            "2♦",            "2♥",            "2♠",
+            "3♣",            "3♦",            "3♥",            "3♠",
+            "4♣",            "4♦",            "4♥",            "4♠",
+            "5♣",            "5♦",            "5♥",            "5♠",
+            "6♣",            "6♦",            "6♥",            "6♠",
+            "7♣",            "7♦",            "7♥",            "7♠",
+            "8♣",            "8♦",            "8♥",            "8♠",
+            "9♣",            "9♦",            "9♥",            "9♠",
+           "10♣",           "10♦",           "10♥",           "10♠",
+            "J♣",            "J♦",            "J♥",            "J♠",
+            "Q♣",            "Q♦",            "Q♥",            "Q♠",
+            "K♣",            "K♦",            "K♥",            "K♠"
             ];
 
 var new_deck = shuffle(deck);
@@ -38,4 +44,38 @@ function shuffle(array_old) {
   return array;
 }
 
-console.log(new_deck);
+initialHand(new_deck, numbers_of_players, players);
+
+function initialHand(new_deck, numbers, players) {
+
+  for (var i = numbers*2, z = 0, k = 0 ; i > 0 ; i--, z++, k++)
+    {
+      if ( k > numbers - 1)
+      {
+        players.players[k-numbers].cards[1] = new_deck[z];
+      }
+      else {
+        players.players[k].cards[0] = new_deck[z];
+      }
+    }
+}
+
+var table = flop(numbers_of_players, new_deck);
+
+function flop(numbers, deck){
+  return [deck[numbers*2+1], deck[numbers*2+2], deck[numbers*2+3]];
+}
+
+table = turn(numbers_of_players, new_deck);
+
+function turn(numbers, deck) {
+  return [deck[numbers*2+1], deck[numbers*2+2], deck[numbers*2+3], deck[numbers*2+5]];
+}
+
+table = river(numbers_of_players, new_deck);
+
+function river(numbers, new_deck){
+  return [deck[numbers*2+1], deck[numbers*2+2], deck[numbers*2+3], deck[numbers*2+5], deck[numbers*2+7]];
+}
+
+results.results(numbers_of_players, players, table);
