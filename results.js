@@ -10,9 +10,11 @@ module.exports = {
 
     /* Will hold the winning player index in the table while checking for games */
     var winner = -1;
-    winner = HighCard(table);
-    console.log("VENCEDOR: " + winner);
+    winner = highCard(table);
+    console.log("VENCEDOR HIGH CARD: " + winner);
     console.log(table);
+    winner = onePair(table);
+    console.log("VENCEDOR PAIRS: " + winner);
   }
 };
 
@@ -208,3 +210,103 @@ function HighCard(table){
     return windex;
   }
 }
+
+function onePair(table_og){
+
+  /* Duplicate the argument to modify it: Functional Programming. Thanks Victor*/
+  var table = table_og;
+
+  /* Remove the suits of the cards, as they don't matter right now */
+  for ( var i = 0; i < table.length; i++) {
+    for ( var z = 0; z < 7; z++)
+    {
+      table[i][z] = Number(table[i][z].slice(0, -1));
+    }
+  }
+
+  var MaiorPar = 0;
+  var MaiorParIndex;
+
+  for ( var i = 0; i < table.length; i++)
+  {
+    if ( checkArrayUniq(table[i]) == true)
+    {
+      continue;
+    }
+    else {
+      debug ? console.log("A array " + i + " contem pelo menos uma dupla") : null ;
+      for (var z = 0; z < 6; z++)
+      {
+        if (table[i][z] == table[i][z+1])
+        {
+          if (Number(table[i][z]) > MaiorPar)
+          {
+            MaiorPar = Number(table[i][z]);
+            MaiorParIndex = i;
+          }
+
+          else if (Number(table[i][z]) == MaiorPar)
+          {
+            var dupla = table[i][z];
+            table[i].splice(z, 2);
+            table[i] = table[i].sort();
+            debug ? console.log("Imprimindo aberracao") : null ;
+            debug ? console.log(table) : null ;
+
+            for ( var k = 0; k < 6; k++)
+            {
+              if (table[MaiorParIndex][z] == table[MaiorParIndex][z+1])
+              {
+                table[MaiorParIndex].splice(z, 2);
+                table[MaiorParIndex] = table[MaiorParIndex].sort();
+              }
+            }
+
+            if ( table[MaiorParIndex][4] > table[i][4])
+            {
+              continue;
+            }
+
+            else if (table[MaiorParIndex][4] < table[i][4])
+            {
+              MaiorParIndex = i;
+            }
+
+            else{
+
+              if ( table[MaiorParIndex][3] > table[i][3])
+              {
+                continue;
+              }
+
+              else if (table[MaiorParIndex][3] < table[i][3])
+              {
+                MaiorParIndex = i;
+              }
+              else {
+                if ( table[MaiorParIndex][2] > table[i][2])
+                {
+                  continue;
+                }
+
+                else if (table[MaiorParIndex][2] < table[i][2])
+                {
+                  MaiorParIndex = i;
+                }
+
+                else {
+                  debug ? console.log("EMPATE ENTRE PARES") : null ;
+                  return -1;
+                }
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  return MaiorParIndex;
+}
+
