@@ -20,6 +20,10 @@ module.exports = {
 
 var debug = false;
 
+function checkArrayUniq(myArray) {
+  return myArray.length === new Set(myArray).size;
+  }
+
 function createArrayofHands(numbers, players, table){
   var array = [];
   for ( var i = numbers, k = 0; k < i; k++)
