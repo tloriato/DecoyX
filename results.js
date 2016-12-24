@@ -8,9 +8,11 @@ module.exports = {
     */
     table = createArrayofHands(numbers, players, table_old);
 
+    /* Print the table */
     console.log(table);
-    var winner = setWinner(winner);
 
+    /* Set the winner and Print it */
+    var winner = setWinner(winner);
     console.log(winner);
   }
 };
@@ -18,6 +20,16 @@ module.exports = {
 var debug = false;
 
 function setWinner(winner){
+  /* check if someone has a royal street flush 
+    if not check if someone has a street flush 
+    if not check if someone has a four 
+    if not check if someone has a fullhouse
+    if not check if someone has a flush 
+    if not check if someone has a Sequence 
+    if not check if someone has a Trunk 
+    if not check if someone has double Pairs 
+    if not check if someone has Pairs 
+    if not check who has the highests cards return the winner*/
   winner = RoyalStreetFl(table);
     if (winner === undefined || winner.length == 0) {
       winner = StreetFl(table);
@@ -69,6 +81,9 @@ function setWinner(winner){
 }
 
 function aux_DoublePair(array, value){
+  /* Purpose: Auxiliary function to determine if the hand has another pair different form the value that is passed. 
+  Used on DoublePairs function. Array is all 7 cards of the players and value is the pair to be ignored.
+  Method: For loop with auxiliary counter, taking advantage that the array passed is sorted.*/
   var z = 0;
   for(var i = 0; i < array.length - 1; i++)
   {
@@ -80,6 +95,8 @@ function aux_DoublePair(array, value){
 }
 
 function aux_PairSimple(array){
+  //Purpose: Auxiliary function to determine if the hand has any pairs and return its value.
+  // Method: For loop with auxiliary counter, taking advantage that the array passed is sorted.
   var aux = 0, check = Number(array[0].slice(0,-1));
   for(var i = 0; i < array.length; i++)
   {
@@ -96,6 +113,8 @@ function aux_PairSimple(array){
 }
 
 function aux_checkPairOnFull(array, value){
+   //Purpose: check if the user has a pair, return true or false 
+   //Used it with: FullHouse, where the value of the pair doesn't really matter
   for(var i = 0; i < array.length; i++)
   {
     if (Number(array[i].slice(0,-1)) == Number(array[i+1].slice(0,-1)) && Number(array[i].slice(0,-1)) != value)
@@ -105,6 +124,9 @@ function aux_checkPairOnFull(array, value){
 }
 
 function aux_trunkVerify(array){
+  // Check if the user has three of a kind (trunk or trinca)
+  // Return its value
+  // Method: For loop with auxiliary counter, taking advantage that the array passed is sorted.
   var aux = 0, check = Number(array[0].slice(0,-1));
   for(var i = 0; i < array.length; i++)
   {
@@ -121,6 +143,8 @@ function aux_trunkVerify(array){
 }
 
 function aux_FourVerify(array){
+  // Verify if user has 4 cards of the same value.
+  // Method: For loop with auxiliary counter, taking advantage that the array passed is sorted.
   var aux = 0, check = Number(array[0].slice(0,-1));
   for(var i = 0; i < array.length; i++)
   {
@@ -136,36 +160,36 @@ function aux_FourVerify(array){
   return -1;
 }
 
-function aux_highestCard(array){
-  return Number(array[6].slice(0,-1));
-}
-
 function aux_sequenceVerifiy(array){
-  if (Number(table[3].slice(0,-1)) == (Number(table[4].slice(0,-1)) - 1)) //___56__
+  /* Function that verifies if a sequence exists and return from where it starts
+  Method: Take advantage of the fact that the middle card of the array, [3], is always inside of a sequence if it exists.
+  After that it test for a few cases and its branches.
+  */
+  if (Number(table[3].slice(0,-1)) == (Number(table[4].slice(0,-1)) - 1))
   {
-    if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1)) + 1)) //__456__
+    if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1)) + 1))
     {
-      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2)) //__4567_
+      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2))
       {
-        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3)) //__45678
+        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3))
           return 2;
-        else if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2)) //_34567X
+        else if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2))
           return 1;
         else
           return -1;
       }
-      else if ((Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2))) //_3456X_
+      else if ((Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2)))
         if ((Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 3)))
           return 1;
       else
-        return -1; // sem sequencia
+        return -1; 
     }
 
-    else if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1)))) //__556__
+    else if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1))))
     {
-      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2)) //__5567_
-        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3)) //__55678
-          if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 1)) //_455678
+      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2))
+        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3)) 
+          if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 1)) 
             return 1;
           else
             return -1;
@@ -175,9 +199,9 @@ function aux_sequenceVerifiy(array){
         return -1;
     }
     else
-      return -1; // sem sequencia
+      return -1;
   }
-  else if (Number(table[3].slice(0,-1)) == Number(table[4].slice(0,-1))) //_55
+  else if (Number(table[3].slice(0,-1)) == Number(table[4].slice(0,-1)))
   {
     if (((Number(table[3].slice(0,-1)) == Number(table[2].slice(0,-1))) + 1) && 
        ((Number(table[3].slice(0,-1)) == Number(table[1].slice(0,-1))) + 2) &&
@@ -198,6 +222,8 @@ function aux_sequenceVerifiy(array){
 }
 
 function aux_checkSuitST(array, index, amount){
+  // Check to see if all cards, starting at [index] up to [amount] are of the same suit.
+  // Used on Street Flush and Royal Steet Flush
   for(var i = index, suits = array[index].slice(-1), z = 0; z < amount; z++, i++)
   {
     if(array[i].slice(-1) != suits)
@@ -208,11 +234,10 @@ function aux_checkSuitST(array, index, amount){
   return true;
 }
 
-function aux_checkArrayUniq(myArray) {
-  return myArray.length === new Set(myArray).size;
-}
-
 function aux_checkSuits(array) {
+  // Check if the user has 5 cards of the same suit
+  // Return the highest card inside of it.
+  // Method: For loop with auxiliary counter, taking advantage that the array passed is sorted.
   var aux = 0, suit = array[0].slice(-1), high = -1;
   for(var i = 0; i < array.length; i++)
   {
@@ -236,6 +261,11 @@ function aux_checkSuits(array) {
 }
 
 function createArrayofHands(numbers, players, table){
+  // 'Main' function that creates a table from the players object, array of the cards in the table and numbers of players.
+  // A -> 14
+  // K -> 13
+  // Q -> 12
+  // J -> 11
   var array = [];
   for ( var i = numbers, k = 0; k < i; k++)
   {
@@ -638,4 +668,4 @@ function Pairs(table){
     }
   }
   return winner;
-}
+} 
