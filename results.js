@@ -528,7 +528,7 @@ function FullHouse(table){
     var aux = aux_trunkVerify(table[i]);
     if ( aux != -1)
     {
-      if(aux_checkPairOnFull)
+      if(aux_checkPairOnFull(table[i],aux))
       {
         if(aux > full)
         {
