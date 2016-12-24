@@ -8,21 +8,232 @@ module.exports = {
     */
     table = createArrayofHands(numbers, players, table_old);
 
-    /* Will hold the winning player index in the table while checking for games */
-    var winner = -1;
-    winner = highCard(table);
-    console.log("VENCEDOR HIGH CARD: " + winner);
     console.log(table);
-    winner = onePair(table);
-    console.log("VENCEDOR PAIRS: " + winner);
+    var winner = setWinner(winner);
+
+    console.log(winner);
   }
 };
 
 var debug = false;
 
-function checkArrayUniq(myArray) {
-  return myArray.length === new Set(myArray).size;
+function setWinner(winner){
+  winner = RoyalStreetFl(table);
+    if (winner === undefined || winner.length == 0) {
+      winner = StreetFl(table);
+      if(winner === undefined || winner.length == 0){
+        winner = Four(table);
+        if(winner == 0 || winner == -1){
+          winner = FullHouse(table);
+          if(winner == 0 || winner == -1){
+            winner = Flush(table);
+            if(winner === undefined || winner.length == 0){
+                winner = Sequence(table);
+                if(winner === undefined || winner.length == 0){
+                    winner = Trunk(table);
+                    if(winner == 0 || winner == -1){
+                        winner = DoublePairs(table);
+                        if(winner === undefined || winner.length == 0){
+                            winner = Pairs(table);
+                            if(winner === undefined || winner.length == 0){
+                              winner = HighCard(table);
+                              console.log("Vencedor com HighCard: ");
+                    }
+                    else
+                      console.log("Vencedor com 1 par: ");
+                  }
+                  else
+                    console.log("Vencedor com 2 pares: ");
+                }
+                else
+                  console.log("Vencedor com uma trinca: ");
+              }
+              else
+                console.log("Vencedor com uma sequencia: ");
+            }
+            else
+              console.log("Vencedor com um flush: ");
+          }
+          else
+            console.log("Vencedor com FullHouse: ");
+        }
+        else
+          console.log("Vencedor com Four: ");
+      }
+      else
+        console.log("Vencedor com Street Flus: ");
+    }
+    else
+      console.log("ROYAL STREET FLUSH: ");
+    return winner;
+}
+
+function aux_DoublePair(array, value){
+  var z = 0;
+  for(var i = 0; i < array.length - 1; i++)
+  {
+    z = z + 1;
+    if (Number(array[i].slice(0,-1)) == Number(array[z].slice(0,-1)) && Number(array[i].slice(0,-1)) != value)
+      return Number(array[i].slice(0,-1));
   }
+  return -1;
+}
+
+function aux_PairSimple(array){
+  var aux = 0, check = Number(array[0].slice(0,-1));
+  for(var i = 0; i < array.length; i++)
+  {
+    if (aux == 2)
+      return check;
+    if (Number(array[i].slice(0,-1)) == check)
+      aux++;
+    else {
+      aux = 0;
+      check = Number(array[i].slice(0,-1));
+    }
+  }
+  return -1;
+}
+
+function aux_checkPairOnFull(array, value){
+  for(var i = 0; i < array.length; i++)
+  {
+    if (Number(array[i].slice(0,-1)) == Number(array[i+1].slice(0,-1)) && Number(array[i].slice(0,-1)) != value)
+      return true;
+  }
+  return false;
+}
+
+function aux_trunkVerify(array){
+  var aux = 0, check = Number(array[0].slice(0,-1));
+  for(var i = 0; i < array.length; i++)
+  {
+    if (aux == 3)
+      return check;
+    if (Number(array[i].slice(0,-1)) == check)
+      aux++;
+    else {
+      aux = 0;
+      check = Number(array[i].slice(0,-1));
+    }
+  }
+  return -1;
+}
+
+function aux_FourVerify(array){
+  var aux = 0, check = Number(array[0].slice(0,-1));
+  for(var i = 0; i < array.length; i++)
+  {
+    if (aux == 4)
+      return check;
+    if (Number(array[i].slice(0,-1)) == check)
+      aux++;
+    else {
+      aux = 0;
+      check = Number(array[i].slice(0,-1));
+    }
+  }
+  return -1;
+}
+
+function aux_highestCard(array){
+  return Number(array[6].slice(0,-1));
+}
+
+function aux_sequenceVerifiy(array){
+  if (Number(table[3].slice(0,-1)) == (Number(table[4].slice(0,-1)) - 1)) //___56__
+  {
+    if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1)) + 1)) //__456__
+    {
+      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2)) //__4567_
+      {
+        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3)) //__45678
+          return 2;
+        else if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2)) //_34567X
+          return 1;
+        else
+          return -1;
+      }
+      else if ((Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 2))) //_3456X_
+        if ((Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 3)))
+          return 1;
+      else
+        return -1; // sem sequencia
+    }
+
+    else if (Number(table[3].slice(0,-1)) == (Number(table[2].slice(0,-1)))) //__556__
+    {
+      if (Number(table[3].slice(0,-1)) == (Number(table[5].slice(0,-1)) - 2)) //__5567_
+        if (Number(table[3].slice(0,-1)) == (Number(table[6].slice(0,-1)) - 3)) //__55678
+          if (Number(table[3].slice(0,-1)) == (Number(table[1].slice(0,-1)) + 1)) //_455678
+            return 1;
+          else
+            return -1;
+        else
+          return -1;
+      else
+        return -1;
+    }
+    else
+      return -1; // sem sequencia
+  }
+  else if (Number(table[3].slice(0,-1)) == Number(table[4].slice(0,-1))) //_55
+  {
+    if (((Number(table[3].slice(0,-1)) == Number(table[2].slice(0,-1))) + 1) && 
+       ((Number(table[3].slice(0,-1)) == Number(table[1].slice(0,-1))) + 2) &&
+       ((Number(table[3].slice(0,-1)) == Number(table[6].slice(0,-1))) - 2) &&
+       ((Number(table[3].slice(0,-1)) == Number(table[5].slice(0,-1))) - 1))
+       return 1;
+
+    else if (((Number(table[3].slice(0,-1)) == Number(table[2].slice(0,-1))) + 1) && 
+            ((Number(table[3].slice(0,-1)) == Number(table[1].slice(0,-1))) + 2) &&
+            ((Number(table[3].slice(0,-1)) == Number(table[0].slice(0,-1))) + 3) &&
+            ((Number(table[3].slice(0,-1)) == Number(table[5].slice(0,-1))) - 1))
+             return 0;
+    else
+      return -1;
+  }
+  else 
+    return -1; // sem sequencia
+}
+
+function aux_checkSuitST(array, index, amount){
+  for(var i = index, suits = array[index].slice(-1), z = 0; z < amount; z++, i++)
+  {
+    if(array[i].slice(-1) != suits)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+function aux_checkArrayUniq(myArray) {
+  return myArray.length === new Set(myArray).size;
+}
+
+function aux_checkSuits(array) {
+  var aux = 0, suit = array[0].slice(-1), high = -1;
+  for(var i = 0; i < array.length; i++)
+  {
+    if (aux == 5)
+    {
+      return high;
+    }
+
+    if (array[i].slice(-1) == suit)
+    {
+      aux++;
+      if (Number(array[i].slice(0,-1) > high))
+        high = Number(array[i].slice(0,-1));
+    }
+    else {
+      aux = 0;
+      suit = array[i].slice(-1);
+    }
+  }
+  return -1;
+}
 
 function createArrayofHands(numbers, players, table){
   var array = [];
@@ -215,102 +426,216 @@ function HighCard(table){
   }
 }
 
-function onePair(table_og){
-
-  /* Duplicate the argument to modify it: Functional Programming. Thanks Victor*/
-  var table = table_og;
-
-  /* Remove the suits of the cards, as they don't matter right now */
-  for ( var i = 0; i < table.length; i++) {
-    for ( var z = 0; z < 7; z++)
+function RoyalStreetFl(table){
+  var winner = [];
+  for(var i = 0; i < table.length; i++)
+  {
+    var index = aux_sequenceVerifiy(table[i]);
+    if (index != -1)
     {
-      table[i][z] = Number(table[i][z].slice(0, -1));
+      if(aux_checkSuitST(table[i], index, 5))
+      {
+        if(Number(table[i][index].slice(0,-1)) == 10)
+        {
+          winner.push(i);
+        }
+      }
+    }
+  }
+  return winner;
+}
+
+function StreetFl(table){
+  var winner = [];
+  var street = 0;
+
+  for(var i = 0; i < table.length; i++)
+  {
+    var index = aux_sequenceVerifiy(table[i]);
+    if (index != -1)
+    {
+      if(aux_checkSuitST(table[i], index, 5))
+      {
+       if(Number(table[i][index].slice(0,-1)) > street)
+       {
+         winner = [];
+         winner.push(i);
+         street = Number(table[i][index].slice(0,-1));
+       }
+       else if (Number(table[i][index].slice(0,-1)) == street)
+       {
+         winner.push(i);
+       }
+      }
+    }
+  }
+  return winner;
+}
+
+function Four(table){
+  var winner = -1;
+  var four = 0;
+  for (var i = 0, aux = 0; i < table.length; i++)
+  {
+    aux = aux_FourVerify(table[i]);
+    if ( aux != -1)
+    {
+      if (aux > four)
+      {
+        four = aux;
+        winner = i;
+      }
+    }
+  }
+  return winner;
+}
+
+function FullHouse(table){
+  var winner = -1;
+  var full = 0;
+  for ( var i = 0; i < table.length; i++)
+  {
+    var aux = aux_trunkVerify(table[i]);
+    if ( aux != -1)
+    {
+      if(aux_checkPairOnFull)
+      {
+        if(aux > full)
+        {
+          full = aux;
+          winner = i;
+        }
+      }
     }
   }
 
-  var MaiorPar = 0;
-  var MaiorParIndex;
+  return winner;
+}
 
+function Flush(table){
+  var winner = [];
+  var high = 0;
+  for (var i = 0; i < table.length; i++)
+  {
+    var aux = aux_checkSuits(table[i]);
+    if (aux != -1)
+    {
+      if (aux > high)
+      {
+        winner = [];
+        winner.push(i);
+        high = aux;
+      }
+      if ( aux == high)
+      {
+        winner.push(i);
+      }
+    }
+  }
+
+  return winner;
+}
+
+function Sequence(table){
+  var winner = [];
+  var high = 0;
+  for (var i = 0; i < table.length; i++)
+  {
+    var aux = aux_sequenceVerifiy(table[i]);
+    if ( aux != -1)
+    {
+      aux = Number(table[i][aux].slice(0,-1));
+      if ( aux > high)
+      {
+        winner = [];
+        winner.push(i);
+        high = aux;
+      }
+      else if ( aux == high)
+      {
+        winner.push(i);
+      }
+    }
+  }
+  return winner;
+}
+
+function Trunk(table){
+  var winner = -1;
+  var high = 0;
+  for ( var i = 0; i < table.length; i++){
+    var aux = aux_trunkVerify(table[i]);
+    if ( aux > high)
+    {
+      winner = i;
+      high = aux;
+    }
+  }
+  return winner;
+}
+
+function DoublePairs(table){
+  var winner = [];
+  var high = 0;
   for ( var i = 0; i < table.length; i++)
   {
-    if ( checkArrayUniq(table[i]) == true)
+    var pair1 = aux_PairSimple(table[i]);
+    if ( pair1 != -1)
     {
-      continue;
-    }
-    else {
-      debug ? console.log("A array " + i + " contem pelo menos uma dupla") : null ;
-      for (var z = 0; z < 6; z++)
+      var pair2 = aux_DoublePair(table[i], pair1);
+      if ( pair2 != -1)
       {
-        if (table[i][z] == table[i][z+1])
+        if( pair2 > pair1)
         {
-          if (Number(table[i][z]) > MaiorPar)
+          if( pair2 > high)
           {
-            MaiorPar = Number(table[i][z]);
-            MaiorParIndex = i;
+            winner = [];
+            winner.push(i);
+            high = pair2;
           }
-
-          else if (Number(table[i][z]) == MaiorPar)
+          else if ( pair2 == high)
           {
-            var dupla = table[i][z];
-            table[i].splice(z, 2);
-            table[i] = table[i].sort();
-            debug ? console.log("Imprimindo aberracao") : null ;
-            debug ? console.log(table) : null ;
-
-            for ( var k = 0; k < 6; k++)
-            {
-              if (table[MaiorParIndex][z] == table[MaiorParIndex][z+1])
-              {
-                table[MaiorParIndex].splice(z, 2);
-                table[MaiorParIndex] = table[MaiorParIndex].sort();
-              }
-            }
-
-            if ( table[MaiorParIndex][4] > table[i][4])
-            {
-              continue;
-            }
-
-            else if (table[MaiorParIndex][4] < table[i][4])
-            {
-              MaiorParIndex = i;
-            }
-
-            else{
-
-              if ( table[MaiorParIndex][3] > table[i][3])
-              {
-                continue;
-              }
-
-              else if (table[MaiorParIndex][3] < table[i][3])
-              {
-                MaiorParIndex = i;
-              }
-              else {
-                if ( table[MaiorParIndex][2] > table[i][2])
-                {
-                  continue;
-                }
-
-                else if (table[MaiorParIndex][2] < table[i][2])
-                {
-                  MaiorParIndex = i;
-                }
-
-                else {
-                  debug ? console.log("EMPATE ENTRE PARES") : null ;
-                  return -1;
-                }
-              }
-            }
-
+            winner.push(i);
+          }
+        }
+        else {
+          if( pair1 > high)
+          {
+            winner = [];
+            winner.push(i);
+            high = pair1;
+          }
+          else if ( pair1 == high)
+          {
+            winner.push(i);
           }
         }
       }
     }
   }
 
-  return MaiorParIndex;
+  return winner;
 }
 
+function Pairs(table){
+  var winner = []
+  var high = 0;
+  for ( var i = 0; i < table.length; i++)
+  {
+    var aux = aux_PairSimple(table[i]);
+    if (!(aux == -1))
+    {
+      if ( aux > high)
+      {
+        winner = [];
+        high = aux;
+        winner.push(i);
+      }
+      else if ( aux == high)
+      {
+        winner.push(i);
+      }
+    }
+  }
+  return winner;
+}
